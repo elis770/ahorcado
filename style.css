@@ -1,0 +1,41 @@
+body {
+    font-family: "Tagesschrift", serif;
+    font-size: 15px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    text-align: center;
+}
+
+div:first-child {
+    position: absolute;
+    top: 10vh;
+    /* left: 50%;
+    transform: translateX(-50%); */
+    margin: 0;
+    /* padding: 10px; */
+    /* background: #fff; */
+}
+
+.hola{
+    position: absolute;
+    bottom: 10vh;
+     margin: 0;
+}
+.imagenes{
+    background-color: brown;
+    width: 90%;
+    height: 40%;
+}
+input{
+    width: 70px;
+    height: 70px;
+    text-align: center;
+    font-size: larger;
+}
+button{
+    margin-top: 12px;
+}
