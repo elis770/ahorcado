@@ -3,7 +3,6 @@ async function cargarPalabras() {
     const respuesta = await fetch('palabras.json');
     const datos = await respuesta.json();
     const palabras = datos.palabras;
-
     const indiceAleatorio = Math.floor(Math.random() * palabras.length);
     return palabras[indiceAleatorio];
   } catch (error) {
@@ -14,11 +13,12 @@ async function cargarPalabras() {
 async function iniciarJuego() {
   const palabraSecreta = await cargarPalabras();
   let palabraMostrada = Array(palabraSecreta.length).fill('_');
-  console.log(palabraSecreta.length, palabraMostrada);
+
   const guiones = document.querySelector('.guiones');
   guiones.innerHTML = palabraMostrada
     .map((letra) => `<span>${letra}</span>`)
     .join(' ');
+
   const guionesSpans = document.querySelectorAll('.guiones span');
   let errores = 0;
   const letraInput = document.querySelector('#letraInput');
@@ -47,6 +47,9 @@ async function iniciarJuego() {
     letraInput.value = '';
   });
 }
+document.addEventListener('DOMContentLoaded', async () => {
+  await iniciarJuego();
+});
 
 // // 6. Función para mostrar el ahorcado
 // function mostrarAhorcado(errores) { ... }
