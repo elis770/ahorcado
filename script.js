@@ -4,6 +4,7 @@ async function cargarPalabras() {
     const datos = await respuesta.json();
     const palabras = datos.palabras;
     const indiceAleatorio = Math.floor(Math.random() * palabras.length);
+    //console.log(palabras[indiceAleatorio]);
     return palabras[indiceAleatorio];
   } catch (error) {
     console.error('Error al cargar las palabras:', error);
