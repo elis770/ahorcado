@@ -1,98 +1,113 @@
 body {
   font-family: "Tagesschrift", serif;
-  font-size: 15px;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  height: 100vh;
+  min-height: 100vh; /* No usar height: 100vh */
+  padding: 2vh 2vw;
   margin: 0;
-  padding: 2vh;
-  box-sizing: border-box;
   background-color: #f0f0f0;
+  overflow-x: hidden;
 }
 
 .x-icon {
   text-align: center;
   width: 100%;
+  margin-bottom: 2vh;
 }
 
 .gallows {
   position: relative;
   width: 90vw;
-  height: 60vh;
-  max-width: 600px;
-  max-height: 400px;
+  max-width: 400px;
+  aspect-ratio: 3 / 2; /*Mantiene proporción */
   margin: auto;
   display: flex;
   justify-content: center;
   align-items: flex-end;
+  margin-bottom: 2vh;
 }
 
 .poste-derecho,
 .barra-horizontal,
-.otra-cosa {
+.otra-cosa,
+.cuerda {
   position: absolute;
-  bottom: 0;
   background-color: brown;
   border-radius: 5px;
-  top: -7vh;
-  left: 3vh;
 }
 
-/*Poste derecho*/
 .poste-derecho {
-  width: 2%;
-  height: 80%;
+  width: 3%;
+  height: 75%;
+  left: 8%;
+  top: -13%;
+  bottom: 0;
 }
 
-/* Barra horizontal */
-.barra-horizontal, .otra-cosa {
-  width: 50%;
-  height: 3%;
+.barra-horizontal {
+  width: 60%;
+  height: 4%;
+  top: -13%;
+  left: 8%;
 }
 
-/* Barra horizontal */
 .otra-cosa {
-  top: 35vh;
-  left: -5vh;
+  width: 20%;
+  height: 4%;
+  top: 60%;
+  left: 0;
+}
+
+.cuerda {
+  width: 2px;
+  height: 15%;
+  top: -10%;
+  left: 60%;
+  background-color: black;
+}
+
+.imagenes {
+  position: absolute;
+  top: 0%;
+  left: 60%;
+  transform: translateX(-50%);
   width: 20%;
 }
 
-/* Cuerda colgante */
-.cuerda {
-  position: absolute;
-  top: -5.5vh;
-  left: 50%;
-  width: 3px;
-  height: 50px;
-  background-color: black;
-}
-img {
-  position: absolute;
-  width: 20vh;
-  top: 0;
-  left: 37%;
+.imagen {
+  width: 100%;
+  height: auto;
 }
 
 .hola {
-  position: absolute;
-  bottom: 10vh;
-  margin: 0;
+  text-align: center;
+  margin-bottom: 2vh;
 }
 
 input {
-  width: 90px;
-  height: 70px;
+  width: 15vw;
+  min-width: 80px;
+  height: 10vw;
+  font-size: 2vw;
   text-align: center;
-  font-size: larger;
+}
+.input-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px; /* Espacio entre input y botón */
+  margin-top: 2vh;
+  flex: 1; /*Opcional: que ambos ocupen igual espacio */
+  min-width: 100px;
 }
 
-button {
-  margin-top: 12px;
-}
-
-.R {
-  font-size: 70px;
+#enviarLetra {
+  font-size: 2vw;
+  width: 15vw;
+  min-width: 80px;
+  height: 10vw;
+  background-color: aquamarine;
 }

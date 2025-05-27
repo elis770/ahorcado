@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- <link
+    <link
         href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Cascadia+Code:ital,wght@0,200..700;1,200..700&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Orbitron:wght@400..900&family=Tagesschrift&display=swap"
-        rel="stylesheet"> -->
+        rel="stylesheet">
     <title>Ahorcado</title>
 </head>
 
@@ -30,16 +30,20 @@
         <div class="cuerda"></div>
         <div class="imagenes">
             <img class="imagen" src="images/0.png" alt=".">
-            <p class="R"></p>
         </div>
     </div>
     <div class="hola">
-        <h3 class="guiones"></h3>
-        <input type="text" id="letraInput" maxlength="1" autofocus title="."><br>
-        <button id="enviarLetra">Probar</button>
-    </div>
-    <script src="script.js"></script>
-    <h2>la palabra tiene <span id="xletras">x</span> cantidad de letras y tenes <span id="xintentos">x</span> intentos!</h2>
+        <div class="info">
+            <h3 class="guiones"></h3>
+            <div class="input-group">
+                <input type="text" id="letraInput" maxlength="1" autofocus title="."><br>
+                <button id="enviarLetra">Probar</button>
+                 <p class="R"></p>
+            </div>
+        </div>
+        <script src="script.js"></script>
+        <h2>la palabra tiene <span id="xletras">x</span> cantidad de letras y tenes <span id="xintentos">x</span>
+            intentos!</h2>
 </body>
 
 </html>
