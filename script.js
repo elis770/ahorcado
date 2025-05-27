@@ -4,7 +4,7 @@ async function cargarPalabras() {
     const datos = await respuesta.json();
     const palabras = datos.palabras;
     const indiceAleatorio = Math.floor(Math.random() * palabras.length);
-    //console.log(palabras[indiceAleatorio]);
+    console.log(palabras[indiceAleatorio]);
     return palabras[indiceAleatorio];
   } catch (error) {
     console.error('Error al cargar las palabras:', error);
@@ -14,7 +14,10 @@ async function cargarPalabras() {
 async function iniciarJuego() {
   const palabraSecreta = await cargarPalabras();
   let palabraMostrada = Array(palabraSecreta.length).fill('_');
-
+  let xletras = document.getElementById("xletras")
+  xletras.innerHTML = palabraSecreta.length
+  let xintentos = document.getElementById("xintentos")
+  xintentos.innerHTML = 10
   const guiones = document.querySelector('.guiones');
   guiones.innerHTML = palabraMostrada
     .map((letra) => `<span>${letra}</span>`)
@@ -37,12 +40,13 @@ async function iniciarJuego() {
       if (letraIngresada === palabraSecreta[i]) {
         guionesSpans[i].textContent = letraIngresada;
         acierto = true;
-        return;
       }
     }
     if (!acierto) {
       errores++;
-      R.innerHTML = errores;
+      xintentos.innerHTML--;
+      //R.innerHTML = errores;
+      mostrarAhorcado(errores)
       console.error('❌ Letra incorrecta');
     }
     letraInput.value = '';
@@ -52,10 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await iniciarJuego();
 });
 
-// // 6. Función para mostrar el ahorcado
-// function mostrarAhorcado(errores) { ... }
-
-// function mostrarAhorcado(errores) {
-//     const img = document.getElementById("ahorcado");
-//     img.src = "images/" + errores + ".png";
-// }
+function mostrarAhorcado(numero) {
+     const img = document.querySelector(".imagen");
+     img.src = "images/" + numero + ".png";
+}
