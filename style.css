@@ -4,8 +4,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  min-height: 100vh; /* No usar height: 100vh */
+  justify-content: center;
+  min-height: 100vh;
   padding: 2vh 2vw;
   margin: 0;
   background-color: #f0f0f0;
@@ -15,28 +15,34 @@ body {
 .x-icon {
   text-align: center;
   width: 100%;
-  margin-bottom: 2vh;
+  margin-top: 1vh;
+  margin-bottom: 4vh;
+}
+
+.x-icon h1, .x-icon p, .x-icon h2 {
+    color: #5d4037;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
 
 .gallows {
   position: relative;
   width: 90vw;
-  max-width: 400px;
-  aspect-ratio: 3 / 2; /*Mantiene proporción */
-  margin: auto;
+  max-width: 700px;
+  aspect-ratio: 3 / 2;
+  margin: 0 auto;
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  margin-bottom: 2vh;
+  margin-bottom: 5vh;
 }
 
 .poste-derecho,
 .barra-horizontal,
-.otra-cosa,
-.cuerda {
+.otra-cosa{
   position: absolute;
-  background-color: brown;
   border-radius: 5px;
+  background: linear-gradient(#8B4513, #A0522D);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
 }
 
 .poste-derecho {
@@ -66,7 +72,20 @@ body {
   height: 15%;
   top: -10%;
   left: 60%;
-  background-color: black;
+  position: absolute;
+  width: 4px;
+  height: 15%;
+  top: -10%;
+  left: 60%;
+  background-color: #C6A98F;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.15) 2px,
+    rgba(0, 0, 0, 0.15) 4px
+  );
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .imagenes {
@@ -80,34 +99,52 @@ body {
 .imagen {
   width: 100%;
   height: auto;
-}
-
-.hola {
-  text-align: center;
-  margin-bottom: 2vh;
+  color: #f0f0f0;
 }
 
 input {
-  width: 15vw;
-  min-width: 80px;
-  height: 10vw;
-  font-size: 2vw;
+  font-family: 'Courier New', monospace;
+  font-size: 2em; 
+  font-weight: 700;
   text-align: center;
+  text-transform: uppercase;
+  width: 130px;
+  height: 120px;
+  border: 2px solid #8B4513;
+  border-radius: 100%;
+  background-color: #fdf5e6;
+  color: #5d4037;
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.3);
 }
 .input-group {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px; /* Espacio entre input y botón */
-  margin-top: 2vh;
-  flex: 1; /*Opcional: que ambos ocupen igual espacio */
-  min-width: 100px;
+  gap: 10px;
+  /* margin-top: 2vh; */
+  /* min-width: 100px; */
 }
 
 #enviarLetra {
-  font-size: 2vw;
-  width: 15vw;
-  min-width: 80px;
-  height: 10vw;
-  background-color: aquamarine;
+  background-color: none;
+  border: none;
+}
+.juego-interactivo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+}
+.guiones {
+    font-size: 2em;
+    font-weight: bold;
+    letter-spacing: 0.3em;
+    font-family: 'Courier New', monospace;
+    color: #5d4037;
+}
+@media (max-width: 700px) {
+  .juego-interactivo {
+    flex-direction: column;
+    gap: 20px; 
+  }
 }

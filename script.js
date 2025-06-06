@@ -14,9 +14,9 @@ async function cargarPalabras() {
 async function iniciarJuego() {
   const palabraSecreta = await cargarPalabras();
   let palabraMostrada = Array(palabraSecreta.length).fill('_');
-  let xletras = document.getElementById("xletras")
-  xletras.innerHTML = palabraSecreta.length
-  let xintentos = document.getElementById("xintentos")
+  let xletras = document.getElementById('xletras');
+  xletras.innerHTML = palabraSecreta.length;
+  let xintentos = document.getElementById('xintentos');
   xintentos.innerHTML = 9;
   const guiones = document.querySelector('.guiones');
   guiones.innerHTML = palabraMostrada
@@ -26,6 +26,11 @@ async function iniciarJuego() {
   const guionesSpans = document.querySelectorAll('.guiones span');
   let errores = 0;
   const letraInput = document.querySelector('#letraInput');
+  letraInput.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') {
+      document.querySelector('#enviarLetra').click(); // Simula el click del botón
+    }
+  });
   const R = document.querySelector('.R');
 
   document.querySelector('button').addEventListener('click', function () {
@@ -33,6 +38,7 @@ async function iniciarJuego() {
     if (!/^[a-z]$/.test(letraIngresada)) {
       console.warn('Por favor ingresa solo una letra válida.');
       letraInput.value = '';
+      letraInput.focus();
       return;
     }
     let acierto = false;
@@ -50,7 +56,7 @@ async function iniciarJuego() {
       console.error('❌ Letra incorrecta');
     }
     letraInput.value = '';
-    opcionesJuego(parseInt(xintentos.innerHTML))
+    opcionesJuego(parseInt(xintentos.innerHTML));
   });
 }
 document.addEventListener('DOMContentLoaded', async () => {
@@ -58,23 +64,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 function mostrarAhorcado(numero) {
-     const img = document.querySelector(".imagen");
-     img.src = "images/" + numero + ".png";
+  const img = document.querySelector('.imagen');
+  img.src = 'images/' + numero + '.png';
 }
 
 let opcionesJuego = (intentos) => {
   if (intentos === 0) {
-   const R = document.querySelector('.R');
-    R.innerHTML = "¡HAS PERDIDO!";
-    const letraInput = document.getElementById("letraInput");
-    const boton = document.getElementById("enviarLetra");
+    const R = document.querySelector('.R');
+    R.innerHTML = '¡HAS PERDIDO!';
+    const letraInput = document.getElementById('letraInput');
+    const boton = document.getElementById('enviarLetra');
 
     // Deshabilitar input y botón
     letraInput.disabled = true;
     boton.disabled = true;
 
     // Mostrar imagen final
-    const img = document.querySelector(".imagen");
-    img.src = "images/final.png"; // Asegúrate de tener esta imagen
+    const img = document.querySelector('.imagen');
+    img.src = 'images/final.png'; // Asegúrate de tener esta imagen
   }
-}
+};

@@ -18,9 +18,9 @@
     <div class="x-icon">
         <h1>Juego del Ahorcado</h1>
 
-        <!-- <h2>BIENVENIDO!</h2> -->
-
-        <p> AYUDA! salve a mi amigo estevan <br> adivine la palabra</p>
+        <p>AYUDA! salve a mi amigo estevan <br> adivine la palabra</p>
+        <h2>la palabra tiene <span id="xletras">x</span> cantidad de letras y tenes <span id="xintentos">x</span>
+            intentos!</h2>
     </div>
     <div class="gallows">
         <div class="poste-izquierdo"></div>
@@ -29,21 +29,25 @@
         <div class="barra-horizontal"></div>
         <div class="cuerda"></div>
         <div class="imagenes">
-            <img class="imagen" src="images/0.png" alt=".">
+            <img class="imagen" src="images/0.png" title="x">
         </div>
     </div>
     <div class="hola">
         <div class="info">
-            <h3 class="guiones"></h3>
-            <div class="input-group">
-                <input type="text" id="letraInput" maxlength="1" autofocus title="."><br>
-                <button id="enviarLetra">Probar</button>
-                 <p class="R"></p>
-            </div>
+            <!-- Esta es la nueva caja que creamos -->
+            <div class="juego-interactivo">
+                <h3 class="guiones"></h3>
+                <div class="input-group">
+                    <input type="text" id="letraInput" maxlength="1" autofocus title="ingrese una letra"><br>
+                    <button id="enviarLetra" title="probar"></button>
+                </div>
+            </div> <!-- Aquí cierra la nueva caja -->
+
+            <!-- El resultado y el texto de abajo ahora están fuera -->
+            <!-- <p class="R"></p> -->
         </div>
+
         <script src="script.js"></script>
-        <h2>la palabra tiene <span id="xletras">x</span> cantidad de letras y tenes <span id="xintentos">x</span>
-            intentos!</h2>
 </body>
 
 </html>
