@@ -1,19 +1,7 @@
-let tempMessageTimeoutId;
-let palabraSecreta;
-let guionesSpans;
-let errores = 0;
-let letraInput;
-let R;
-let xintentos; // También es necesario que xintentos esté accesible
+// script.js
 
-const jugarDeNuevoBtn = document.getElementById('jugarDeNuevoBtn'); // Obtener el botón
-  // Event listener para el botón "Volver a jugar"
-  jugarDeNuevoBtn.addEventListener('click', () => {
-    // Recarga la página para reiniciar el juego
-    location.reload(); 
-  })
-  // Asegúrate de que R esté oculto y el botón de reinicio también al inicio
-  jugarDeNuevoBtn.style.display = 'none'; // Ocultar el botón al inicio
+// Variable para almacenar el ID del timeout del mensaje de error temporal
+let tempMessageTimeoutId;
 
 async function cargarPalabras() {
   try {
@@ -21,15 +9,15 @@ async function cargarPalabras() {
     const datos = await respuesta.json();
     const palabras = datos.palabras;
     const indiceAleatorio = Math.floor(Math.random() * palabras.length);
-    //console.log(palabras[indiceAleatorio]);
+    console.log(palabras[indiceAleatorio]);
     return palabras[indiceAleatorio];
   } catch (error) {
-    return R.innerHTML('Error al cargar las palabras:', error);
+    console.error('Error al cargar las palabras:', error);
+    return 'error';
   }
 }
 
-async function objetosJuego() {
-  //parte 1
+async function iniciarJuego() {
   const palabraSecreta = await cargarPalabras();
   let palabraMostrada = Array(palabraSecreta.length).fill('_');
   let xletras = document.getElementById('xletras');
@@ -40,23 +28,29 @@ async function objetosJuego() {
   guiones.innerHTML = palabraMostrada
     .map((letra) => `<span>${letra}</span>`)
     .join(' ');
-  guionesSpans = document.querySelectorAll('.guiones span');
-  errores = 0;
-  letraInput = document.querySelector('#letraInput');
+
+  const guionesSpans = document.querySelectorAll('.guiones span');
+  let errores = 0;
+  const letraInput = document.querySelector('#letraInput');
+  const R = document.querySelector('.R');
+  const jugarDeNuevoBtn = document.getElementById('jugarDeNuevoBtn'); // Obtener el botón
+
+  // Asegúrate de que R esté oculto y el botón de reinicio también al inicio
+  R.style.display = 'none';
+  jugarDeNuevoBtn.style.display = 'none'; // Ocultar el botón al inicio
+
   // Limpiar cualquier timeout pendiente de una partida anterior
-  // if (tempMessageTimeoutId) {
-  //   clearTimeout(tempMessageTimeoutId);
-  //   tempMessageTimeoutId = null;
-  // }
+  if (tempMessageTimeoutId) {
+    clearTimeout(tempMessageTimeoutId);
+    tempMessageTimeoutId = null;
+  }
+
   // Habilitar input
   letraInput.disabled = false;
   letraInput.value = ''; // Limpiar el input
   letraInput.focus(); // Poner el foco
-  const R = document.querySelector('.R');
-  R.style.display = 'none';
-};
 
-  //parte 2
+
   letraInput.addEventListener('keydown', function (event) {
     if (event.key === 'Enter') {
       const letraIngresada = letraInput.value.toLowerCase();
@@ -78,14 +72,13 @@ async function objetosJuego() {
         if (letraIngresada === palabraSecreta[i]) {
           guionesSpans[i].textContent = letraIngresada;
           acierto = true;
-          letraInput.value = ''; // Limpiar el input
         }
       }
 
       if (!acierto) {
         errores++;
         xintentos.innerHTML--; // Decrementa los intentos
-        letraInput.value = ''; // Limpiar el input
+
         // Limpia cualquier timeout anterior del mensaje temporal de error
         if (tempMessageTimeoutId) {
           clearTimeout(tempMessageTimeoutId);
@@ -94,7 +87,7 @@ async function objetosJuego() {
 
         R.style.display = 'block';
         R.innerHTML = `❌ Letra "${letraIngresada.toUpperCase()}" incorrecta.`;
-        personita(errores);
+        mostrarAhorcado(errores);
 
         // Configura un nuevo timeout para OCULTAR este mensaje temporal
         tempMessageTimeoutId = setTimeout(() => {
@@ -119,10 +112,19 @@ async function objetosJuego() {
       opcionesJuego(parseInt(xintentos.innerHTML), palabraSecreta, guionesSpans);
     }
   });
+  
+  // Event listener para el botón "Volver a jugar"
+  jugarDeNuevoBtn.addEventListener('click', () => {
+    // Recarga la página para reiniciar el juego
+    location.reload(); 
+  });
+}
 
+document.addEventListener('DOMContentLoaded', async () => {
+  await iniciarJuego();
+});
 
-
-function personita(numero) {
+function mostrarAhorcado(numero) {
   const img = document.querySelector('.imagen');
   img.src = 'images/' + numero + '.png';
 }
@@ -168,6 +170,92 @@ let opcionesJuego = (intentosRestantes, palabraSecreta, guionesSpans) => {
     img.src = 'images/final.png'; // Imagen de "perdido"
   }
 };
-document.addEventListener('DOMContentLoaded', async () => {
-  await objetosJuego();
-});
+// async function cargarPalabras() {
+//   try {
+//     const respuesta = await fetch('palabras.json');
+//     const datos = await respuesta.json();
+//     const palabras = datos.palabras;
+//     const indiceAleatorio = Math.floor(Math.random() * palabras.length);
+//     console.log(palabras[indiceAleatorio]);
+//     return palabras[indiceAleatorio];
+//   } catch (error) {
+//     console.error('Error al cargar las palabras:', error);
+//     return 'error';
+//   }
+// }
+// async function iniciarJuego() {
+//   const palabraSecreta = await cargarPalabras();
+//   let palabraMostrada = Array(palabraSecreta.length).fill('_');
+//   let xletras = document.getElementById('xletras');
+//   xletras.innerHTML = palabraSecreta.length;
+//   let xintentos = document.getElementById('xintentos');
+//   xintentos.innerHTML = 9;
+//   const guiones = document.querySelector('.guiones');
+//   guiones.innerHTML = palabraMostrada
+//     .map((letra) => `<span>${letra}</span>`)
+//     .join(' ');
+
+//   const guionesSpans = document.querySelectorAll('.guiones span');
+//   let errores = 0;
+//   const letraInput = document.querySelector('#letraInput');
+//   const R = document.querySelector('.R');
+//   letraInput.addEventListener('keydown', function (event) {
+//     if (event.key === 'Enter') {
+//       const letraIngresada = letraInput.value.toLowerCase();
+//       if (!/^[a-z]$/.test(letraIngresada)) {
+//         console.warn('Por favor ingresa solo una letra válida.');
+//         letraInput.value = '';
+//         letraInput.focus();
+//         return;
+//       }
+//       let acierto = false;
+//       for (let i = 0; i < palabraSecreta.length; i++) {
+//         if (letraIngresada === palabraSecreta[i]) {
+//           guionesSpans[i].textContent = letraIngresada;
+//           acierto = true;
+//         }
+//       }
+//       if (!acierto) {
+//         errores++;
+//         xintentos.innerHTML--;
+//         R.innerHTML = errores;
+//         mostrarAhorcado(errores);
+//         setTimeout(() => {
+//           R.style.display = 'block';
+//         R.innerHTML = `❌ Letra ${letraIngresada} incorrecta`;
+//         }, 500);
+//         R.style.display = 'none';
+//         R.innerHTML = ''
+//       }
+//       letraInput.value = '';
+//       opcionesJuego(parseInt(xintentos.innerHTML));
+//     }
+//   });
+// }
+
+// document.addEventListener('DOMContentLoaded', async () => {
+//   await iniciarJuego();
+// });
+
+// function mostrarAhorcado(numero) {
+//   const img = document.querySelector('.imagen');
+//   img.src = 'images/' + numero + '.png';
+// }
+
+// let opcionesJuego = (intentos) => {
+//   if (intentos === 0) {
+//     const R = document.querySelector('.R');
+//     R.style.display = 'block';
+//     R.innerHTML = '¡HAS PERDIDO!';
+//     const letraInput = document.getElementById('letraInput');
+//     const boton = document.getElementById('enviarLetra');
+
+//     // Deshabilitar input y botón
+//     letraInput.disabled = true;
+//     boton.disabled = true;
+
+//     // Mostrar imagen final
+//     const img = document.querySelector('.imagen');
+//     img.src = 'images/final.png'; // Asegúrate de tener esta imagen
+//   }
+// };

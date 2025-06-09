@@ -8,7 +8,10 @@ body {
   min-height: 100vh;
   padding: 2vh 2vw;
   margin: 0;
-  background-color: #f0f0f0;
+  background: linear-gradient(to right,
+      #b8b65e 0%,
+      #e2d477 60%,
+      #beae44 100%);
   overflow-x: hidden;
 }
 
@@ -16,29 +19,27 @@ body {
   text-align: center;
   width: 100%;
   margin-top: 1vh;
-  margin-bottom: 4vh;
+  margin-bottom: 7vh;
 }
 
-.x-icon h1, .x-icon p, .x-icon h2 {
-    color: #5d4037;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+.x-icon h1,
+.x-icon p,
+.x-icon h2 {
+  color: #5d4037;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .gallows {
   position: relative;
-  width: 90vw;
-  max-width: 700px;
+  width: 70vw;
+  max-width: 500px;
+  max-height: min-content;
   aspect-ratio: 3 / 2;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  margin-bottom: 5vh;
 }
 
 .poste-derecho,
 .barra-horizontal,
-.otra-cosa{
+.otra-cosa {
   position: absolute;
   border-radius: 5px;
   background: linear-gradient(#8B4513, #A0522D);
@@ -78,13 +79,11 @@ body {
   top: -10%;
   left: 60%;
   background-color: #C6A98F;
-  background-image: repeating-linear-gradient(
-    45deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.15) 2px,
-    rgba(0, 0, 0, 0.15) 4px
-  );
+  background-image: repeating-linear-gradient(45deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.15) 2px,
+      rgba(0, 0, 0, 0.15) 4px);
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 }
 
@@ -102,9 +101,29 @@ body {
   color: #f0f0f0;
 }
 
-input {
+.juego-interactivo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+}
+
+.R {
+  display: none;
+  position: absolute;
+
+}
+.guiones {
+  font-size: 2em;
+  font-weight: bold;
+  letter-spacing: 0.3em;
   font-family: 'Courier New', monospace;
-  font-size: 2em; 
+  color: #5d4037;
+}
+
+#letraInput {
+  font-family: 'Courier New', monospace;
+  font-size: 2em;
   font-weight: 700;
   text-align: center;
   text-transform: uppercase;
@@ -116,35 +135,15 @@ input {
   color: #5d4037;
   box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.3);
 }
-.input-group {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  /* margin-top: 2vh; */
-  /* min-width: 100px; */
-}
 
 #enviarLetra {
-  background-color: none;
+  display: none;
   border: none;
 }
-.juego-interactivo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 50px;
-}
-.guiones {
-    font-size: 2em;
-    font-weight: bold;
-    letter-spacing: 0.3em;
-    font-family: 'Courier New', monospace;
-    color: #5d4037;
-}
+
 @media (max-width: 700px) {
   .juego-interactivo {
     flex-direction: column;
-    gap: 20px; 
+    gap: 20px;
   }
 }
