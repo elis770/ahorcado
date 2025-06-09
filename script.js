@@ -1,19 +1,13 @@
-let tempMessageTimeoutId;
-let palabraSecreta;
-let guionesSpans;
-let errores = 0;
-let letraInput;
-let R;
-let xintentos; // También es necesario que xintentos esté accesible
-
-const jugarDeNuevoBtn = document.getElementById('jugarDeNuevoBtn'); // Obtener el botón
-  // Event listener para el botón "Volver a jugar"
-  jugarDeNuevoBtn.addEventListener('click', () => {
-    // Recarga la página para reiniciar el juego
-    location.reload(); 
-  })
-  // Asegúrate de que R esté oculto y el botón de reinicio también al inicio
-  jugarDeNuevoBtn.style.display = 'none'; // Ocultar el botón al inicio
+let palabraSecreta,
+  letraInput,
+  R,
+  xintentos,
+  guionesSpans,
+  errores = 0,
+    tempMessageTimeoutId = null, // ✅ Inicializada como null
+  img,
+  guiones,
+  jugarDeNuevoBtn;
 
 async function cargarPalabras() {
   try {
@@ -21,153 +15,135 @@ async function cargarPalabras() {
     const datos = await respuesta.json();
     const palabras = datos.palabras;
     const indiceAleatorio = Math.floor(Math.random() * palabras.length);
-    //console.log(palabras[indiceAleatorio]);
+    console.log(palabras[indiceAleatorio]);
     return palabras[indiceAleatorio];
   } catch (error) {
-    return R.innerHTML('Error al cargar las palabras:', error);
+    R.style.display = 'block';
+    R.innerHTML = '⚠️ Error al cargar las palabras: ' + error;
   }
 }
 
 async function objetosJuego() {
-  //parte 1
-  const palabraSecreta = await cargarPalabras();
+  palabraSecreta = await cargarPalabras();
   let palabraMostrada = Array(palabraSecreta.length).fill('_');
   let xletras = document.getElementById('xletras');
   xletras.innerHTML = palabraSecreta.length;
-  let xintentos = document.getElementById('xintentos');
   xintentos.innerHTML = 9;
-  const guiones = document.querySelector('.guiones');
   guiones.innerHTML = palabraMostrada
     .map((letra) => `<span>${letra}</span>`)
     .join(' ');
   guionesSpans = document.querySelectorAll('.guiones span');
-  errores = 0;
-  letraInput = document.querySelector('#letraInput');
-  // Limpiar cualquier timeout pendiente de una partida anterior
-  // if (tempMessageTimeoutId) {
-  //   clearTimeout(tempMessageTimeoutId);
-  //   tempMessageTimeoutId = null;
-  // }
+  //Limpiar cualquier timeout pendiente de una partida anterior
+  if (tempMessageTimeoutId) {
+    clearTimeout(tempMessageTimeoutId);
+    tempMessageTimeoutId = null;
+  }
   // Habilitar input
   letraInput.disabled = false;
-  letraInput.value = ''; // Limpiar el input
-  letraInput.focus(); // Poner el foco
-  const R = document.querySelector('.R');
+  letraInput.value = '';
+  letraInput.focus();
   R.style.display = 'none';
-};
+}
+function mostrarMensajeTemporal(mensaje) {
+  if (tempMessageTimeoutId) {
+    clearTimeout(tempMessageTimeoutId);
+  }
 
-  //parte 2
-  letraInput.addEventListener('keydown', function (event) {
-    if (event.key === 'Enter') {
-      const letraIngresada = letraInput.value.toLowerCase();
-      
-      // Valida que el juego no haya terminado ya
-      if (letraInput.disabled) {
-          return; 
-      }
+  R.style.display = 'block';
+  R.innerHTML = mensaje;
 
-      if (!/^[a-z]$/.test(letraIngresada)) {
-        console.warn('Por favor ingresa solo una letra válida.');
-        letraInput.value = '';
-        letraInput.focus();
-        return;
-      }
+  tempMessageTimeoutId = setTimeout(() => {
+    R.style.display = 'none';
+    R.innerHTML = '';
+    tempMessageTimeoutId = null;
+  }, 800);
+}
 
-      let acierto = false;
-      for (let i = 0; i < palabraSecreta.length; i++) {
-        if (letraIngresada === palabraSecreta[i]) {
-          guionesSpans[i].textContent = letraIngresada;
-          acierto = true;
-          letraInput.value = ''; // Limpiar el input
-        }
-      }
-
-      if (!acierto) {
-        errores++;
-        xintentos.innerHTML--; // Decrementa los intentos
-        letraInput.value = ''; // Limpiar el input
-        // Limpia cualquier timeout anterior del mensaje temporal de error
-        if (tempMessageTimeoutId) {
-          clearTimeout(tempMessageTimeoutId);
-          tempMessageTimeoutId = null;
-        }
-
-        R.style.display = 'block';
-        R.innerHTML = `❌ Letra "${letraIngresada.toUpperCase()}" incorrecta.`;
-        personita(errores);
-
-        // Configura un nuevo timeout para OCULTAR este mensaje temporal
-        tempMessageTimeoutId = setTimeout(() => {
-          R.style.display = 'none';
-          R.innerHTML = '';
-          tempMessageTimeoutId = null; // Limpiar la referencia
-        }, 2000); // El mensaje estará visible por 2 segundos
-        
-      } else {
-        // Si hay un acierto, oculta el mensaje de error temporal si estaba visible
-        if (R.style.display === 'block' && tempMessageTimeoutId) {
-            clearTimeout(tempMessageTimeoutId);
-            tempMessageTimeoutId = null;
-            R.style.display = 'none';
-            R.innerHTML = '';
-        }
-      }
-
-      letraInput.value = '';
-      letraInput.focus();
-      // Pasa la palabra secreta completa para poder mostrarla si pierde o gana
-      opcionesJuego(parseInt(xintentos.innerHTML), palabraSecreta, guionesSpans);
+function accionJuego(l, t) {
+  let acierto = false;
+  if (!/^[a-z]$/.test(l)) {
+    mostrarMensajeTemporal('⚠️ Por favor ingresa solo una letra válida.');
+    tempMessageTimeoutId();
+    letraInput.value = '';
+    letraInput.focus();
+    return;
+  }
+  for (let i = 0; i < t.length; i++) {
+    if (l === t[i]) {
+      guionesSpans[i].textContent = l;
+      acierto = true;
     }
-  });
+  }
 
-
+  if (!acierto) {
+    errores++;
+    xintentos.innerHTML--;
+    console.log(xintentos);
+    personita(errores);
+    mostrarMensajeTemporal(`❌ Letra "${l.toUpperCase()}" incorrecta.`);
+    if (xintentos < 0) {
+      if (tempMessageTimeoutId) {
+        clearTimeout(tempMessageTimeoutId);
+      }
+      tempMessageTimeoutId();
+    }
+  }
+  letraInput.value = '';
+  letraInput.focus();
+  opcionesJuego(parseInt(xintentos.innerHTML), t, guionesSpans);
+}
 
 function personita(numero) {
-  const img = document.querySelector('.imagen');
+  img = document.querySelector('.imagen');
   img.src = 'images/' + numero + '.png';
 }
 
-let opcionesJuego = (intentosRestantes, palabraSecreta, guionesSpans) => {
-  const R = document.querySelector('.R');
-  const letraInput = document.getElementById('letraInput');
-  const jugarDeNuevoBtn = document.getElementById('jugarDeNuevoBtn');
-
-  // Comprobar si todas las letras han sido adivinadas
-  const palabraAdivinada = Array.from(guionesSpans).every(span => span.textContent !== '_');
-
+let opcionesJuego = (i, t, g) => {
+  const palabraAdivinada = Array.from(g).every(
+    (s) => s.textContent.trim() !== '_'
+  );
   if (palabraAdivinada) {
-      // SI EL JUGADOR GANA:
-      // Asegurarse de limpiar cualquier timeout de mensaje de error temporal pendiente
-      if (tempMessageTimeoutId) {
-          clearTimeout(tempMessageTimeoutId);
-          tempMessageTimeoutId = null;
-      }
-
-      R.style.display = 'block';
-      R.innerHTML = '¡FELICITACIONES! Has adivinado la palabra.';
-      
-      letraInput.disabled = true; // Deshabilita el input
-      jugarDeNuevoBtn.style.display = 'block'; // Muestra el botón de reiniciar
-
-  } else if (intentosRestantes === 0) {
-    // SI EL JUGADOR PIERDE:
-    // Asegurarse de limpiar cualquier timeout de mensaje de error temporal pendiente
-    // ¡ESTO ES CRUCIAL PARA QUE EL MENSAJE DE PERDIDO NO DESAPAREZCA!
+    letraInput.disabled = true;
+    R.style.display = 'block';
+    jugarDeNuevoBtn.style.display = 'block';
+    R.innerHTML = '¡FELICITACIONES! Has adivinado la palabra.';
+  } else if (i === 0) {
     if (tempMessageTimeoutId) {
-        clearTimeout(tempMessageTimeoutId);
-        tempMessageTimeoutId = null;
+      clearTimeout(tempMessageTimeoutId);
+      tempMessageTimeoutId = null;
     }
 
-    R.style.display = 'block'; // Muestra el mensaje
-    R.innerHTML = `¡HAS PERDIDO! La palabra era: ${palabraSecreta.toUpperCase()}`; // Muestra la palabra secreta
-    
-    letraInput.disabled = true; // Deshabilita el input
-    jugarDeNuevoBtn.style.display = 'block'; // Muestra el botón de reiniciar
+    letraInput.disabled = true;
+    R.style.display = 'block';
+    R.innerHTML = `¡HAS PERDIDO! La palabra era: ${t.toUpperCase()}`;
+    jugarDeNuevoBtn.style.display = 'block';
 
     const img = document.querySelector('.imagen');
-    img.src = 'images/final.png'; // Imagen de "perdido"
+    img.src = 'images/final.png';
   }
 };
 document.addEventListener('DOMContentLoaded', async () => {
+  jugarDeNuevoBtn = document.getElementById('jugarDeNuevoBtn');
+  jugarDeNuevoBtn.addEventListener('click', () => {
+    location.reload();
+  });
+  jugarDeNuevoBtn.style.display = 'none';
+
+  (letraInput = document.getElementById('letraInput')),
+    (R = document.querySelector('.R')),
+    (xintentos = document.getElementById('xintentos')),
+    (guiones = document.querySelector('.guiones'));
+
+  letraInput.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') {
+      const letraIngresada = letraInput.value.toLowerCase();
+      if (letraInput.disabled) {
+        return;
+      } else {
+        accionJuego(letraIngresada, palabraSecreta);
+      }
+    }
+  });
+
   await objetosJuego();
 });

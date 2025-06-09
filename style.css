@@ -108,11 +108,23 @@ body {
   gap: 50px;
 }
 
-.R {
+#m{
   display: none;
   position: absolute;
+}  
 
+.jugarDeNuevoBtn{
+  display: none; 
+  margin-top: 20px; 
+  padding: 10px 20px; 
+  font-size: 1.2em; 
+  cursor: pointer; 
+  background-color: #5d4037; 
+  color: white; 
+  border: none; 
+  border-radius: 5px;
 }
+
 .guiones {
   font-size: 2em;
   font-weight: bold;
