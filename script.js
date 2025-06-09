@@ -4,10 +4,12 @@ let palabraSecreta,
   xintentos,
   guionesSpans,
   errores = 0,
-    tempMessageTimeoutId = null, // ✅ Inicializada como null
+  tempMessageTimeoutId = null,
   img,
   guiones,
-  jugarDeNuevoBtn;
+  jugarDeNuevoBtn,
+  m,
+  palabraAdivinada;
 
 async function cargarPalabras() {
   try {
@@ -18,8 +20,7 @@ async function cargarPalabras() {
     console.log(palabras[indiceAleatorio]);
     return palabras[indiceAleatorio];
   } catch (error) {
-    R.style.display = 'block';
-    R.innerHTML = '⚠️ Error al cargar las palabras: ' + error;
+    mostrarMensajeTemporal('⚠️ Error al cargar las palabras: ' + error);
   }
 }
 
@@ -48,22 +49,21 @@ function mostrarMensajeTemporal(mensaje) {
   if (tempMessageTimeoutId) {
     clearTimeout(tempMessageTimeoutId);
   }
-
+  m.style.display = 'flex';
   R.style.display = 'block';
   R.innerHTML = mensaje;
-
-  tempMessageTimeoutId = setTimeout(() => {
-    R.style.display = 'none';
-    R.innerHTML = '';
-    tempMessageTimeoutId = null;
-  }, 800);
+    setTimeout(() => {
+      m.style.display = 'none';
+      R.style.display = 'none';
+      R.innerHTML = '';
+      tempMessageTimeoutId = null;
+    }, 1000);
 }
 
 function accionJuego(l, t) {
   let acierto = false;
   if (!/^[a-z]$/.test(l)) {
     mostrarMensajeTemporal('⚠️ Por favor ingresa solo una letra válida.');
-    tempMessageTimeoutId();
     letraInput.value = '';
     letraInput.focus();
     return;
@@ -80,7 +80,9 @@ function accionJuego(l, t) {
     xintentos.innerHTML--;
     console.log(xintentos);
     personita(errores);
-    mostrarMensajeTemporal(`❌ Letra "${l.toUpperCase()}" incorrecta.`);
+    if (!palabraAdivinada && parseInt(xintentos.innerHTML) > 1) {
+      mostrarMensajeTemporal(`❌ Letra "${l.toUpperCase()}" incorrecta.`);
+    }
     if (xintentos < 0) {
       if (tempMessageTimeoutId) {
         clearTimeout(tempMessageTimeoutId);
@@ -99,11 +101,10 @@ function personita(numero) {
 }
 
 let opcionesJuego = (i, t, g) => {
-  const palabraAdivinada = Array.from(g).every(
-    (s) => s.textContent.trim() !== '_'
-  );
+  palabraAdivinada = Array.from(g).every((s) => s.textContent.trim() !== '_');
   if (palabraAdivinada) {
     letraInput.disabled = true;
+    m.style.display = 'flex';
     R.style.display = 'block';
     jugarDeNuevoBtn.style.display = 'block';
     R.innerHTML = '¡FELICITACIONES! Has adivinado la palabra.';
@@ -114,10 +115,10 @@ let opcionesJuego = (i, t, g) => {
     }
 
     letraInput.disabled = true;
+    m.style.display = 'flex';
     R.style.display = 'block';
     R.innerHTML = `¡HAS PERDIDO! La palabra era: ${t.toUpperCase()}`;
     jugarDeNuevoBtn.style.display = 'block';
-
     const img = document.querySelector('.imagen');
     img.src = 'images/final.png';
   }
@@ -128,7 +129,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     location.reload();
   });
   jugarDeNuevoBtn.style.display = 'none';
-
+  m = document.querySelector('main');
+  m.style.display = 'none';
   (letraInput = document.getElementById('letraInput')),
     (R = document.querySelector('.R')),
     (xintentos = document.getElementById('xintentos')),
