@@ -12,19 +12,20 @@ let palabraSecreta, //palabra a adivinar
   m, //caja del mensaje de alerta
   palabraAdivinada;
 
-//generacion del json la palabra secreta a descubrir
+//generacion de la palabra secreta a descubrir desde el servidor
 async function cargarPalabras() {
   try {
-    //esperar res de json
-    const respuesta = await fetch('palabras.json');
-    const datos = await respuesta.json();
-    const palabras = datos.palabras; //recibe el json
-    //elige una de un indice random TODO: creo que hay una nueva manera de usar random...
+    //esperar res del servidor
+    const respuesta = await fetch('http://localhost:3000/api/palabras');
+    const palabras = await respuesta.json();
+    //elige una de un indice random
     const indiceAleatorio = Math.floor(Math.random() * palabras.length);
     console.log(palabras[indiceAleatorio]); //esto es para reviciones
     return palabras[indiceAleatorio];
   } catch (error) {
-    mostrarMensajeTemporal('⚠️ Error al cargar las palabras: ' + error);
+    mostrarMensajeTemporal('⚠️ Error al cargar las palabras desde el servidor: ' + error);
+    console.log(error)
+    return null; // Devuelve null o una palabra por defecto en caso de error
   }
 }
 
