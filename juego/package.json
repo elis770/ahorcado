@@ -1,0 +1,25 @@
+{
+  "name": "ahorcado",
+  "version": "1.0.0",
+  "main": "script copy.js",
+    "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "live-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elis770/ahorcado.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/elis770/ahorcado/issues"
+  },
+  "homepage": "https://github.com/elis770/ahorcado#readme",
+  "description": "",
+  "dependencies": {
+    "live-server": "^1.2.0"
+  }
+}

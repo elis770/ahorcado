@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Cascadia+Code:ital,wght@0,200..700;1,200..700&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Orbitron:wght@400..900&family=Tagesschrift&display=swap"
+        rel="stylesheet">
+    <title>Ahorcado</title>
+</head>
+
+<body>
+    <div class="x-icon">
+        <h1>Juego del Ahorcado</h1>
+
+        <p>AYUDA! salve a mi amigo estevan <br> adivine la palabra</p>
+        <h2>la palabra tiene <span id="xletras">x</span> cantidad de letras y tenes <span id="xintentos">x</span>
+            intentos!</h2>
+    </div>
+    <div class="gallows">
+        <div class="poste-izquierdo"></div>
+        <div class="otra-cosa"></div>
+        <div class="poste-derecho"></div>
+        <div class="barra-horizontal"></div>
+        <div class="cuerda"></div>
+        <div class="imagenes">
+            <img class="imagen" src="images/0.png" title="x">
+        </div>
+    </div>
+    <main>
+    <p class="R"></p>
+    <button type="button" id="jugarDeNuevoBtn">Volver a Jugar</button>
+    </main>
+
+    <div class="juego-interactivo">
+        <div class="input-group">
+            <input type="text" id="letraInput" maxlength="1" autofocus title="ingrese una letra"><br>
+            <button type="submit" id="enviarLetra" title="probar"></button>
+        </div>
+        <h3 class="guiones"></h3>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
