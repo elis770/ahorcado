@@ -38,6 +38,24 @@ app.get('/api/palabras', async (req, res) => {
   }
 });
 
+// Ruta de la API para guardar el resultado del juego
+app.post('/api/resultados', async (req, res) => {
+  const { palabra, intentos_fallidos, resultado } = req.body;
+
+  if (!palabra || intentos_fallidos === undefined || !resultado) {
+    return res.status(400).send('Faltan datos para guardar el resultado.');
+  }
+
+  try {
+    const query = 'INSERT INTO resultados (palabra, intentos_fallidos, resultado) VALUES (?, ?, ?)';
+    await db.query(query, [palabra, intentos_fallidos, resultado]);
+    res.status(201).send('Resultado guardado exitosamente.');
+  } catch (err) {
+    console.error('Error al guardar en la base de datos:', err);
+    res.status(500).send('Error en el servidor al guardar el resultado.');
+  }
+});
+
 // Iniciar el servidor
 app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);

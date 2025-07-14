@@ -1,0 +1,29 @@
+Alex Chamo
+5:35 p.m.
+const express = require('express')
+
+const app = express()
+
+let jugadores = [ 
+  { nombre: "Juan", puntaje: 2 }, 
+  { nombre: "Pedro", puntaje: 3 } 
+]
+
+// Configura el contenido estático en public
+app.use(express.static('public'));
+
+app.get('/hello', (req, res) => {
+  let name = req.query.name
+  res.send('Hello ' + name)
+})
+
+app.get('/jugadores', (req, res) => {
+  res.json(jugadores)
+})
+
+app.post('/agregarjugador', (req, res) => {
+  const { nombre, puntaje } = req.body
+  jugadores.push({ nombre,
+wie-dxou-xju
+
+

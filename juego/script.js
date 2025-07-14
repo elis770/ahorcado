@@ -132,6 +132,7 @@ let opcionesJuego = (i, t, g) => {
     R.style.display = 'block';
     jugarDeNuevoBtn.style.display = 'block';
     R.innerHTML = '¡FELICITACIONES! Has adivinado la palabra.';
+    guardarResultado(t, errores, 'victoria');
   } else if (i === 0) { //si es false ha perdido y mostramos mensaje
     if (tempMessageTimeoutId) {
       clearTimeout(tempMessageTimeoutId);
@@ -146,8 +147,29 @@ let opcionesJuego = (i, t, g) => {
     jugarDeNuevoBtn.style.display = 'block';
     img = document.querySelector('.imagen');
     img.src = 'images/final.png'; //mostramos una imagen especial
+    guardarResultado(t, errores, 'derrota');
   }
 };
+
+//funcion para guardar el resultado
+async function guardarResultado(palabra, intentosFallidos, resultado) {
+  try {
+    await fetch('http://localhost:3000/api/resultados', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        palabra: palabra,
+        intentos_fallidos: intentosFallidos,
+        resultado: resultado,
+      }),
+    });
+  } catch (error) {
+    console.error('Error al guardar el resultado:', error);
+    mostrarMensajeTemporal('⚠️ Error al guardar la partida.');
+  }
+}
 
 //cuando inicie el programa damos los variables los propositos pero luego de haber definido la funcion del juegon por eso es aync await
 document.addEventListener('DOMContentLoaded', async () => {
