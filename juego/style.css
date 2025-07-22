@@ -1,3 +1,15 @@
+.uno, .dos {
+  display: none;
+}
+
+/* Mostrar según estado */
+[data-tag="uno"] .uno {
+  display: block;
+}
+[data-tag="dos"] .dos {
+  display: block;
+}
+
 body {
   font-family: "Tagesschrift", serif;
   position: relative;

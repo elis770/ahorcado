@@ -14,11 +14,16 @@
     <title>Ahorcado</title>
 </head>
 
-<body>
+<body data-tag="dos">
+    <div data-tag="dos" class="dos">
+        <div id="w"></div>
+    </div>
+
+    <div data-tag="uno" class="uno">
     <div class="x-icon">
         <h1>Juego del Ahorcado</h1>
 
-        <p>AYUDA! salve a mi amigo estevan <br> adivine la palabra</p>
+        <p>AYUDA! salve a mi amigo <span id="name"></span> adivine la palabra</p>
         <h2>la palabra tiene <span id="xletras">x</span> cantidad de letras y tenes <span id="xintentos">x</span>
             intentos!</h2>
     </div>
@@ -43,6 +48,7 @@
             <button type="submit" id="enviarLetra" title="probar"></button>
         </div>
         <h3 class="guiones"></h3>
+    </div>
     </div>
 
     <script src="script.js"></script>
