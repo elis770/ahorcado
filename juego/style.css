@@ -190,3 +190,52 @@ button .jugarDeNuevoBtn {
     gap: 20px;
   }
 }
+
+/* CONTENEDOR DE LA TABLA */
+#w {
+  width: 100%;
+  max-height: 400px; /* Altura máxima antes de activar scroll */
+  overflow-y: auto; /* Scroll vertical si se pasa de altura */
+  background-color: #f5f5dc;
+  padding: 20px;
+  box-shadow: inset 0 0 5px #aaa;
+  border-radius: 12px;
+}
+
+/* TABLA INTERNA */
+#w table {
+  width: 100%;
+  border-collapse: separate; /* Permite border-radius en celdas */
+  border-spacing: 0 5px; /* Espacio entre filas */
+  font-size: 1.1em;
+}
+
+/* ENCABEZADOS */
+#w th {
+  background-color: #c8bda9;
+  color: #5d4037;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  line-height: 2.5;
+  padding: 10px 15px;
+  border: 1px solid #5d4037;
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* CELDAS */
+#w td {
+  background-color: white;
+  color: #333;
+  line-height: 2.5;
+  padding: 10px 15px;
+  border: 1px solid #5d4037;
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* FILAS ALTERNADAS (opcional para mejor visualización) */
+#w tr:nth-child(even) td {
+  background-color: #f8f1e4;
+}

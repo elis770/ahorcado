@@ -7,13 +7,14 @@ let palabraSecreta, //palabra a adivinar
   errores = 0, //can de errores
   tempMessageTimeoutId = null, //si hay que mostrar mensaje
   img, //la imagen de la persona
-  guiones, 
+  guiones,
   jugarDeNuevoBtn, //reinicio
   m, //caja del mensaje de alerta
   palabraAdivinada,
   puntaje = 10,
   puntajeA = 0,
-  nombreJugador;
+  nombreJugador,
+  p;
 
 //generacion de la palabra secreta a descubrir desde el servidor
 async function cargarPalabras() {
@@ -26,19 +27,23 @@ async function cargarPalabras() {
     console.log(palabras[indiceAleatorio]); //esto es para reviciones
     return palabras[indiceAleatorio];
   } catch (error) {
-    mostrarMensajeTemporal('⚠️ Error al cargar las palabras desde el servidor: ' + error);
-    console.log(error)
+    mostrarMensajeTemporal(
+      '⚠️ Error al cargar las palabras desde el servidor: ' + error
+    );
+    console.log(error);
     return null; // Devuelve null o una palabra por defecto en caso de error
   }
 }
 
 //funcion preparacion para el juego
 async function objetosJuego() {
-  nombreJugador = prompt("¡Bienvenido al juego del ahorcado! Ingresa tu nombre para guardar la partida: ");
-  nombreVictima = prompt("A quien quiere salvar en este juego?: ");
-  let name =  document.getElementById('name');
-  name.innerHTML = nombreVictima
-  palabraSecreta = await cargarPalabras(); //precisamos la palabra secreta 
+  nombreJugador = prompt(
+    '¡Bienvenido al juego del ahorcado! Ingresa tu nombre para guardar la partida: '
+  );
+  nombreVictima = prompt('A quien quiere salvar en este juego?: ');
+  let name = document.getElementById('name');
+  name.innerHTML = nombreVictima;
+  palabraSecreta = await cargarPalabras(); //precisamos la palabra secreta
   let palabraMostrada = Array(palabraSecreta.length).fill('_'); //recoremos la palabra para saber cuantas hay
   let xletras = document.getElementById('xletras');
   xletras.innerHTML = palabraSecreta.length; //lo anterior lo ponemos en html
@@ -73,12 +78,12 @@ function mostrarMensajeTemporal(mensaje) {
   R.innerHTML = mensaje; //mensaje me lo mandan por parametro
 
   //que desaparezca el mensaje luego de unos segundos
-    setTimeout(() => {
-      m.style.display = 'none';
-      R.style.display = 'none';
-      R.innerHTML = '';
-      tempMessageTimeoutId = null;
-    }, 1000);
+  setTimeout(() => {
+    m.style.display = 'none';
+    R.style.display = 'none';
+    R.innerHTML = '';
+    tempMessageTimeoutId = null;
+  }, 1000);
 }
 
 //opciones de accion a la hora de que usuario ingrese letra
@@ -97,8 +102,8 @@ function accionJuego(l, t) {
     if (l === t[i]) {
       guionesSpans[i].textContent = l; //lo ingresamos en el lugar
       acierto = true; //la variable cambia
-      puntajeA = puntaje
-      puntaje = puntajeA + 10
+      puntajeA = puntaje;
+      puntaje = puntajeA + 10;
     }
   }
 
@@ -137,18 +142,21 @@ function personita(numero) {
 //funcion decenlase del juego
 let opcionesJuego = (i, t, g) => {
   palabraAdivinada = Array.from(g).every((s) => s.textContent.trim() !== '_'); //nos fijamos si esta llena los guiones o falta
-  if (palabraAdivinada) { //si es true ha ganado y mostramos mensaje y le damos la opcion de jugar devuelta
+  if (palabraAdivinada) {
+    //si es true ha ganado y mostramos mensaje y le damos la opcion de jugar devuelta
     letraInput.disabled = true;
 
-    puntajeA = puntaje
-    puntaje = puntajeA + 90
+    puntajeA = puntaje;
+    puntaje = puntajeA + 90;
 
     m.style.display = 'flex';
     R.style.display = 'block';
     jugarDeNuevoBtn.style.display = 'block';
+    playersBtn.style.display = 'block';
     R.innerHTML = '¡FELICITACIONES! Has adivinado la palabra.';
     guardarResultado(nombreJugador, t, errores, 'victoria', puntaje);
-  } else if (i === 0) { //si es false ha perdido y mostramos mensaje
+  } else if (i === 0) {
+    //si es false ha perdido y mostramos mensaje
     if (tempMessageTimeoutId) {
       clearTimeout(tempMessageTimeoutId);
       tempMessageTimeoutId = null;
@@ -159,14 +167,50 @@ let opcionesJuego = (i, t, g) => {
     R.style.display = 'block';
     R.innerHTML = `¡HAS PERDIDO! La palabra era: ${t.toUpperCase()}`;
     jugarDeNuevoBtn.style.display = 'block';
+   playersBtn.style.display = 'block';
     img = document.querySelector('.imagen');
     img.src = 'images/final.png'; //mostramos una imagen especial
     guardarResultado(nombreJugador, t, errores, 'derrota', puntaje);
   }
 };
-
+/*let opcionesJuego = (i, t, g) => {
+  palabraAdivinada = Array.from(g).every((s) => s.textContent.trim() !== '_'); //nos fijamos si esta llena los guiones o falta
+  let f
+  let c
+  if (palabraAdivinada) {
+    puntajeA = puntaje;
+    puntaje = puntajeA + 90;
+    f =  'victoria'
+    c = '¡FELICITACIONES! Has adivinado la palabra.';
+    return f, c
+  } else if (i === 0) {
+    //si es false ha perdido y mostramos mensaje
+    if (tempMessageTimeoutId) {
+      clearTimeout(tempMessageTimeoutId);
+      tempMessageTimeoutId = null;
+    }
+    f =  'victoria'
+    c = `¡HAS PERDIDO! La palabra era: ${t.toUpperCase()}`;
+    img = document.querySelector('.imagen');
+    img.src = 'images/final.png'; //mostramos una imagen especial
+    return f, c
+  }
+  letraInput.disabled = true; //si es true ha ganado y mostramos mensaje y le damos la opcion de jugar devuelta
+  m.style.display = 'flex';
+  R.style.display = 'block';
+  jugarDeNuevoBtn.style.display = 'block';
+  playersBtn.style.display = 'block';
+  R.innerHTML = c
+  guardarResultado(nombreJugador, t, errores, f, puntaje);
+};*/
 //funcion para guardar el resultado
-async function guardarResultado(nombre, palabra, intentosFallidos, resultado, puntaje) {
+async function guardarResultado(
+  nombre,
+  palabra,
+  intentosFallidos,
+  resultado,
+  puntaje
+) {
   try {
     await fetch('http://localhost:3000/api/resultados', {
       method: 'POST',
@@ -174,11 +218,11 @@ async function guardarResultado(nombre, palabra, intentosFallidos, resultado, pu
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        nombre: nombre || 'Anónimo', // Si no ingresa nombre, se guarda como 'Anónimo'
+        nombre: nombre || 'Anónimo',
         palabra: palabra,
         intentos_fallidos: intentosFallidos,
         resultado: resultado,
-        puntaje: puntaje
+        puntaje: puntaje,
       }),
     });
   } catch (error) {
@@ -187,116 +231,107 @@ async function guardarResultado(nombre, palabra, intentosFallidos, resultado, pu
   }
 }
 
-
-/* Tu código original comentado
-async function cargarJugadores() {
+// Obtiene los resultados de los jugadores desde el servidor.
+async function cargarResultados() {
   try {
-    //esperar res del servidor
-    const respuesta = await fetch('http://localhost:3000/jugadores');
-    const palabras = await respuesta.json();
-    return palabras; //esto es para reviciones
+    const respuesta = await fetch('http://localhost:3000/api/resultados');
+    if (!respuesta.ok) {
+      throw new Error(`Error HTTP: ${respuesta.status}`);
+    }
+    const resultados = await respuesta.json();
+    return resultados;
   } catch (error) {
-    mostrarMensajeTemporal('⚠️ Error al cargar las palabras desde el servidor: ' + error);
-    console.log(error)
-    return null; // Devuelve null o una palabra por defecto en caso de error
+    console.error('Falló la petición para cargar los resultados:', error);
+    mostrarMensajeTemporal('⚠️ No se pudieron cargar los resultados.');
+    return null; // Devuelve null si hay un error
   }
 }
 
+// Muestra los resultados en una tabla HTML en el elemento #w.
+function mostrarResultadosEnTabla(resultados) {
+  const w = document.getElementById('w');
+  if (!w || !resultados && resultados.length > 0) {
+    console.error('Error al cargar los jugadores.');
+    return;
+  }
+    // Ordenar los resultados por puntaje de mayor a menor
+    resultados.sort((a, b) => b.puntaje - a.puntaje);
 
-let w = document.getElementById('w')
-w.innerHTML = cargarJugadores()
-*/
+    // Crear la estructura de la tabla
+    let tablaHtml = `
+      <table>
+        <thead>
+          <tr>
+            <th>Puesto</th>
+            <th>Jugador</th>
+            <th>Palabra</th>
+            <th>Intentos Fallidos</th>
+            <th>Resultado</th>
+            <th>Puntaje</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
 
-// Versión corregida con .then() para evitar el error [object Promise]
-function cargarJugadoresConThen() {
-  fetch('http://localhost:3000/api/resultados')
-    .then(respuesta => {
-      if (!respuesta.ok) {
-        throw new Error(`Error HTTP: ${respuesta.status}`);
-      }
-      return respuesta.json();
-    })
-    .then(resultados => {
-      const w = document.getElementById('w');
-      if (w) {
-        if (resultados && resultados.length > 0) {
-          // Creamos la tabla
-          let tablaHtml = `
-            <table border="1" style="border-collapse: collapse; width: 100%; text-align: center;">
-              <thead>
-                <tr>
-                  <th>Jugador</th>
-                  <th>Palabra</th>
-                  <th>Intentos Fallidos</th>
-                  <th>Resultado</th>
-                  <th>Puntaje</th>
-                  <th>Fecha</th>
-                </tr>
-              </thead>
-              <tbody>
-          `;
-
-          // Rellenamos filas
-          resultados.forEach(r => {
-            tablaHtml += `
-              <tr>
-                <td>${r.nombre || 'Anónimo'}</td>
-                <td>${r.palabra}</td>
-                <td>${r.intentos_fallidos}</td>
-                <td>${r.resultado}</td>
-                <td>${r.puntaje}</td>
-                <td>${new Date(r.fecha).toLocaleString()}</td>
-              </tr>
-            `;
-          });
-
-          tablaHtml += `
-              </tbody>
-            </table>
-          `;
-
-          w.innerHTML = tablaHtml;
-        } else {
-          w.innerHTML = '<p>No hay resultados para mostrar.</p>';
-        }
-      }
-    })
-    .catch(error => {
-      console.error('Falló la petición para cargar jugadores:', error);
-      const w = document.getElementById('w');
-      if (w) {
-        w.innerHTML = 'Error al cargar la lista de resultados.';
-      }
-      mostrarMensajeTemporal('⚠️ No se pudieron cargar los resultados.');
+    // Añadir una fila por cada resultado
+    resultados.forEach((r, i) => {
+      tablaHtml += `
+        <tr>
+          <td>#${i + 1}</td>
+          <td>${r.nombre || 'Anónimo'}</td>
+          <td>${r.palabra}</td>
+          <td>${r.intentos_fallidos}</td>
+          <td>${r.resultado}</td>
+          <td>${r.puntaje}</td>
+          <td>${new Date(r.fecha).toLocaleString()}</td>
+        </tr>
+      `;
     });
+
+    tablaHtml += `
+        </tbody>
+      </table>
+    `;
+
+    w.innerHTML = tablaHtml;
 }
 
+function table () {
+  miBody.setAttribute('data-tag', 'dos');
+  guardarResultado()
+}
 
 //cuando inicie el programa damos los variables los propositos pero luego de haber definido la funcion del juegon por eso es aync await
 document.addEventListener('DOMContentLoaded', async () => {
   // Llamamos a la función para cargar jugadores aquí,
   // para asegurar que el elemento #w ya exista en la página.
-  cargarJugadoresConThen();
+  // Cargar y mostrar los resultados de la tabla de jugadores.
+  const resultados = await cargarResultados();
+  mostrarResultadosEnTabla(resultados);
   //boton de reinicio
   jugarDeNuevoBtn = document.getElementById('jugarDeNuevoBtn');
   jugarDeNuevoBtn.addEventListener('click', () => {
+    miBody.setAttribute('data-tag', 'uno');
     location.reload();
   });
   jugarDeNuevoBtn.style.display = 'none'; //default quiero que este tapado
+  playersBtn.style.display = 'none'; //default quiero que este tapado
   m = document.querySelector('main');
-  m.style.display = 'none';  //default quiero que este tapado
+  m.style.display = 'none'; //default quiero que este tapado
   (letraInput = document.getElementById('letraInput')),
     (R = document.querySelector('.R')),
     (xintentos = document.getElementById('xintentos')),
     (guiones = document.querySelector('.guiones'));
 
-    //en caso que aprete enter y ponga una letra
+  //en caso que aprete enter y ponga una letra
   letraInput.addEventListener('keydown', function (event) {
     if (event.key === 'Enter') {
       const letraIngresada = letraInput.value.toLowerCase(); //hacer lo minuscula
       if (letraInput.disabled) {
         return; //si esta disable no va hacer nada
-      } else { //si no es los casos anteriores, que ejecute la funcion con los parametros
+      } else {
+        //si no es los casos anteriores, que ejecute la funcion con los parametros
         accionJuego(letraIngresada, palabraSecreta);
       }
     }
