@@ -14,46 +14,55 @@
     <title>Ahorcado</title>
 </head>
 
-<body data-tag="dos">
-    <div data-tag="dos" class="dos">
+<body data-tag="cero">
+    <h1>Juego del Ahorcado</h1>
+    <div class="bienvenida">
+        <div id="mensaje">
+            <p>👋 ¡Bienvenido al juego del ahorcado! Ingresa tu nombre para guardar la partida:</p>
+        </div>
+        <div id="botonOpcion">
+            <input id="nom1" placeholder="Ingresa tu nombre" type="text">
+            <input id="nom2" placeholder="A quien quiere salvar?" type="text">
+            <button id="contraPersona" class="inicioBtn">Jugar</button>
+            <!-- <button id="contraCompuint" class="reinicio">Jugar contra la compu</button> -->
+        </div>
+    </div>
+
+    <div class="juego">
+        <div class="x-icon">
+            <p>AYUDA! salve a mi amigo <span id="name"></span> adivine la palabra</p>
+            <h2>la palabra tiene <span id="xletras">x</span> cantidad de letras y tenes <span id="xintentos">x</span>
+                intentos!</h2>
+        </div>
+        <div class="gallows">
+            <div class="poste-izquierdo"></div>
+            <div class="otra-cosa"></div>
+            <div class="poste-derecho"></div>
+            <div class="barra-horizontal"></div>
+            <div class="cuerda"></div>
+            <div class="imagenes">
+                <img class="imagen" src="images/0.png" title="x">
+            </div>
+        </div>
+        <main>
+            <p class="R"></p>
+            <button type="button" id="jugarDeNuevoBtn">Volver a Jugar</button>
+            <button type="button" id="playersBtn">Ver jugadores</button>
+        </main>
+
+        <div class="juego-interactivo">
+            <div class="input-group">
+                <input type="text" id="letraInput" maxlength="1" autofocus title="ingrese una letra"><br>
+                <button type="submit" id="enviarLetra" title="probar"></button>
+            </div>
+            <h3 class="guiones"></h3>
+        </div>
+    </div>
+
+    <div class="players">
         <div id="w">
-            <!-- <table border="1" style="border-collapse: collapse; width: 100%; text-align: center;"> -->
         </div>
     </div>
-
-    <div data-tag="uno" class="uno">
-    <div class="x-icon">
-        <h1>Juego del Ahorcado</h1>
-
-        <p>AYUDA! salve a mi amigo <span id="name"></span> adivine la palabra</p>
-        <h2>la palabra tiene <span id="xletras">x</span> cantidad de letras y tenes <span id="xintentos">x</span>
-            intentos!</h2>
-    </div>
-    <div class="gallows">
-        <div class="poste-izquierdo"></div>
-        <div class="otra-cosa"></div>
-        <div class="poste-derecho"></div>
-        <div class="barra-horizontal"></div>
-        <div class="cuerda"></div>
-        <div class="imagenes">
-            <img class="imagen" src="images/0.png" title="x">
-        </div>
-    </div>
-    <main>
-    <p class="R"></p>
-    <button type="button" id="jugarDeNuevoBtn">Volver a Jugar</button>
-    <button type="button" id="playersBtn">Ver jugadores</button>
-    </main>
-
-    <div class="juego-interactivo">
-        <div class="input-group">
-            <input type="text" id="letraInput" maxlength="1" autofocus title="ingrese una letra"><br>
-            <button type="submit" id="enviarLetra" title="probar"></button>
-        </div>
-        <h3 class="guiones"></h3>
-    </div>
-    </div>
-
     <script src="script.js"></script>
 </body>
 

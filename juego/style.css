@@ -1,12 +1,15 @@
-.uno, .dos {
+.bienvenida, .juego, .players {
   display: none;
 }
 
 /* Mostrar según estado */
-[data-tag="uno"] .uno {
+[data-tag="cero"] .bienvenida {
   display: block;
 }
-[data-tag="dos"] .dos {
+[data-tag="uno"] .juego {
+  display: block;
+}
+[data-tag="dos"] .players {
   display: block;
 }
 
@@ -27,6 +30,57 @@ body {
   overflow-x: hidden;
 }
 
+#mensaje {
+  background-color: #0ebd83;
+  font-size: 3vh;
+  max-width: 800px;
+  height: auto;
+  padding: 20px;
+  text-align: center;
+  border-radius: 15px;
+}
+
+#botonOpcion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.reinicio {
+  font-family: "Cascadia Code", sans-serif;
+  font-size: 3vh;
+  border-radius: 15px;
+  border: none;
+  cursor: pointer;
+}
+
+#contraPersona {
+  width: 60vh;
+  height: 50px;
+  margin-top: 5vh;
+  background-color: rgb(31, 50, 3);
+  color: greenyellow;
+  transition: background-color 0.3s ease;
+}
+
+#contraCompuint {
+  width: 60vh;
+  height: 50px;
+  margin-top: 5vh;
+  background-color: rgb(73, 121, 1);
+  color: rgb(187, 230, 124);
+  transition: background-color 0.3s ease;
+}
+
+#contraPersona:hover,
+#contraCompuint:hover {
+  background-color: #319171;
+  color: white;
+}
+input{
+  text-align: center;
+}
 .x-icon {
   text-align: center;
   width: 100%;

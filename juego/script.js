@@ -9,12 +9,15 @@ let palabraSecreta, //palabra a adivinar
   img, //la imagen de la persona
   guiones,
   jugarDeNuevoBtn, //reinicio
+  playersBtn, // Botón para ver jugadores
   m, //caja del mensaje de alerta
   palabraAdivinada,
   puntaje = 10,
   puntajeA = 0,
   nombreJugador,
-  p;
+  nombreVictima, // Variable para el nombre de la víctima
+  p,
+  inicioBtn;
 
 //generacion de la palabra secreta a descubrir desde el servidor
 async function cargarPalabras() {
@@ -22,9 +25,13 @@ async function cargarPalabras() {
     //esperar res del servidor
     const respuesta = await fetch('http://localhost:3000/api/palabras');
     const palabras = await respuesta.json();
+    
+      if (!Array.isArray(palabras) || palabras.length === 0) {
+      throw new Error("La respuesta no es un array válido o está vacío");
+    }
     //elige una de un indice random
     const indiceAleatorio = Math.floor(Math.random() * palabras.length);
-    console.log(palabras[indiceAleatorio]); //esto es para reviciones
+    console.log("Palabra elegida:", palabras[indiceAleatorio]);
     return palabras[indiceAleatorio];
   } catch (error) {
     mostrarMensajeTemporal(
@@ -37,10 +44,6 @@ async function cargarPalabras() {
 
 //funcion preparacion para el juego
 async function objetosJuego() {
-  nombreJugador = prompt(
-    '¡Bienvenido al juego del ahorcado! Ingresa tu nombre para guardar la partida: '
-  );
-  nombreVictima = prompt('A quien quiere salvar en este juego?: ');
   let name = document.getElementById('name');
   name.innerHTML = nombreVictima;
   palabraSecreta = await cargarPalabras(); //precisamos la palabra secreta
@@ -64,6 +67,11 @@ async function objetosJuego() {
   letraInput.value = '';
   letraInput.focus();
   R.style.display = 'none'; //que el mensaje quede tapado
+  m.style.display = 'none';
+  jugarDeNuevoBtn.style.display = 'none';
+  playersBtn.style.display = 'none';
+  errores = 0;
+  personita(0);
 }
 
 //funcion para mostrar mensajes temporales en caso de error o que se equivoco
@@ -83,7 +91,7 @@ function mostrarMensajeTemporal(mensaje) {
     R.style.display = 'none';
     R.innerHTML = '';
     tempMessageTimeoutId = null;
-  }, 1000);
+  }, 2000); // Aumentado a 2 segundos para mejor visibilidad
 }
 
 //opciones de accion a la hora de que usuario ingrese letra
@@ -119,13 +127,6 @@ function accionJuego(l, t) {
     if (!palabraAdivinada && parseInt(xintentos.innerHTML) > 1) {
       mostrarMensajeTemporal(`❌ Letra "${l.toUpperCase()}" incorrecta.`); //mostramos mensaje y con la letra que puso
       //TODO: si es que manda la misma letra no deberia acumularce la cantidad de errores y asi tambien si es que mando una correcta que ya la puso en el mensaje deberia mandar un aviso
-    }
-
-    if (xintentos > 0) {
-      if (tempMessageTimeoutId) {
-        clearTimeout(tempMessageTimeoutId);
-      }
-      tempMessageTimeoutId();
     }
   }
   letraInput.value = '';
@@ -167,42 +168,13 @@ let opcionesJuego = (i, t, g) => {
     R.style.display = 'block';
     R.innerHTML = `¡HAS PERDIDO! La palabra era: ${t.toUpperCase()}`;
     jugarDeNuevoBtn.style.display = 'block';
-   playersBtn.style.display = 'block';
+    playersBtn.style.display = 'block';
     img = document.querySelector('.imagen');
     img.src = 'images/final.png'; //mostramos una imagen especial
     guardarResultado(nombreJugador, t, errores, 'derrota', puntaje);
   }
 };
-/*let opcionesJuego = (i, t, g) => {
-  palabraAdivinada = Array.from(g).every((s) => s.textContent.trim() !== '_'); //nos fijamos si esta llena los guiones o falta
-  let f
-  let c
-  if (palabraAdivinada) {
-    puntajeA = puntaje;
-    puntaje = puntajeA + 90;
-    f =  'victoria'
-    c = '¡FELICITACIONES! Has adivinado la palabra.';
-    return f, c
-  } else if (i === 0) {
-    //si es false ha perdido y mostramos mensaje
-    if (tempMessageTimeoutId) {
-      clearTimeout(tempMessageTimeoutId);
-      tempMessageTimeoutId = null;
-    }
-    f =  'victoria'
-    c = `¡HAS PERDIDO! La palabra era: ${t.toUpperCase()}`;
-    img = document.querySelector('.imagen');
-    img.src = 'images/final.png'; //mostramos una imagen especial
-    return f, c
-  }
-  letraInput.disabled = true; //si es true ha ganado y mostramos mensaje y le damos la opcion de jugar devuelta
-  m.style.display = 'flex';
-  R.style.display = 'block';
-  jugarDeNuevoBtn.style.display = 'block';
-  playersBtn.style.display = 'block';
-  R.innerHTML = c
-  guardarResultado(nombreJugador, t, errores, f, puntaje);
-};*/
+
 //funcion para guardar el resultado
 async function guardarResultado(
   nombre,
@@ -250,15 +222,15 @@ async function cargarResultados() {
 // Muestra los resultados en una tabla HTML en el elemento #w.
 function mostrarResultadosEnTabla(resultados) {
   const w = document.getElementById('w');
-  if (!w || !resultados && resultados.length > 0) {
-    console.error('Error al cargar los jugadores.');
+  if (!w || !resultados || resultados.length === 0) {
+    w.innerHTML = '<p>No hay resultados para mostrar.</p>';
     return;
   }
-    // Ordenar los resultados por puntaje de mayor a menor
-    resultados.sort((a, b) => b.puntaje - a.puntaje);
+  // Ordenar los resultados por puntaje de mayor a menor
+  resultados.sort((a, b) => b.puntaje - a.puntaje);
 
-    // Crear la estructura de la tabla
-    let tablaHtml = `
+  // Crear la estructura de la tabla
+  let tablaHtml = `
       <table>
         <thead>
           <tr>
@@ -274,9 +246,9 @@ function mostrarResultadosEnTabla(resultados) {
         <tbody>
     `;
 
-    // Añadir una fila por cada resultado
-    resultados.forEach((r, i) => {
-      tablaHtml += `
+  // Añadir una fila por cada resultado
+  resultados.forEach((r, i) => {
+    tablaHtml += `
         <tr>
           <td>#${i + 1}</td>
           <td>${r.nombre || 'Anónimo'}</td>
@@ -287,42 +259,72 @@ function mostrarResultadosEnTabla(resultados) {
           <td>${new Date(r.fecha).toLocaleString()}</td>
         </tr>
       `;
-    });
+  });
 
-    tablaHtml += `
+  tablaHtml += `
         </tbody>
       </table>
     `;
 
-    w.innerHTML = tablaHtml;
+  w.innerHTML = tablaHtml;
 }
 
-function table () {
-  miBody.setAttribute('data-tag', 'dos');
-  guardarResultado()
+async function iniciarJuego() {
+  await objetosJuego();
 }
 
 //cuando inicie el programa damos los variables los propositos pero luego de haber definido la funcion del juegon por eso es aync await
 document.addEventListener('DOMContentLoaded', async () => {
-  // Llamamos a la función para cargar jugadores aquí,
-  // para asegurar que el elemento #w ya exista en la página.
+  const miBody = document.body;
+  const nom1Input = document.getElementById('nom1');
+  const nom2Input = document.getElementById('nom2');
+  const contraPersonaBtn = document.getElementById('contraPersona');
+  playersBtn = document.getElementById('playersBtn');
+
+  contraPersonaBtn.addEventListener('click', () => {
+    nombreJugador = nom1Input.value.trim();
+    nombreVictima = nom2Input.value.trim();
+
+    if (!nombreJugador || !nombreVictima) {
+      mostrarMensajeTemporal('⚠️ Por favor, ingresa ambos nombres.');
+      return;
+    }
+
+    miBody.setAttribute('data-tag', 'uno');
+    iniciarJuego();
+  });
+
   // Cargar y mostrar los resultados de la tabla de jugadores.
   const resultados = await cargarResultados();
-  mostrarResultadosEnTabla(resultados);
+  if (resultados) {
+    mostrarResultadosEnTabla(resultados);
+  }
+
   //boton de reinicio
   jugarDeNuevoBtn = document.getElementById('jugarDeNuevoBtn');
   jugarDeNuevoBtn.addEventListener('click', () => {
-    miBody.setAttribute('data-tag', 'uno');
-    location.reload();
+    miBody.setAttribute('data-tag', 'cero');
+    nom1Input.value = '';
+    nom2Input.value = '';
+    nom1Input.focus();
   });
+
+  playersBtn.addEventListener('click', async () => {
+    miBody.setAttribute('data-tag', 'dos');
+    const resultados = await cargarResultados();
+    if (resultados) {
+      mostrarResultadosEnTabla(resultados);
+    }
+  });
+
   jugarDeNuevoBtn.style.display = 'none'; //default quiero que este tapado
   playersBtn.style.display = 'none'; //default quiero que este tapado
   m = document.querySelector('main');
   m.style.display = 'none'; //default quiero que este tapado
-  (letraInput = document.getElementById('letraInput')),
-    (R = document.querySelector('.R')),
-    (xintentos = document.getElementById('xintentos')),
-    (guiones = document.querySelector('.guiones'));
+  letraInput = document.getElementById('letraInput');
+  R = document.querySelector('.R');
+  xintentos = document.getElementById('xintentos');
+  guiones = document.querySelector('.guiones');
 
   //en caso que aprete enter y ponga una letra
   letraInput.addEventListener('keydown', function (event) {
@@ -337,5 +339,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
-  await objetosJuego(); //esperamos la funcion dentro de la palabra secreta
+  // No iniciar el juego automáticamente
+  // await objetosJuego();
 });
