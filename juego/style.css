@@ -29,11 +29,14 @@ body {
       #beae44 100%);
   overflow-x: hidden;
 }
-
+#titulo{
+  font-size: 5vh;
+}
 #mensaje {
-  background-color: #0ebd83;
+  background-color: #853823;
+  color: #e5d3cf;
   font-size: 3vh;
-  max-width: 800px;
+  max-width: 700px;
   height: auto;
   padding: 20px;
   text-align: center;
@@ -44,23 +47,32 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
 }
 
-.reinicio {
+/*.reinicio {
   font-family: "Cascadia Code", sans-serif;
   font-size: 3vh;
   border-radius: 15px;
   border: none;
   cursor: pointer;
-}
-
-#contraPersona {
+}*/
+#nom1, #nom2{
   width: 60vh;
   height: 50px;
   margin-top: 5vh;
-  background-color: rgb(31, 50, 3);
-  color: greenyellow;
+  font-size: 3vh;
+  /*background-color: rgb(31, 50, 3);
+  color: greenyellow;*/
+  transition: background-color 0.3s ease;
+}
+#contraPersona {
+  width: 30vh;
+  height: 60px;
+  margin-top: 5vh;
+  background-color: #46342f;
+  color: #e5d3cf;
+  border-radius: 10px;
+  font-size: 3vh;
   transition: background-color 0.3s ease;
 }
 
@@ -247,6 +259,7 @@ button .jugarDeNuevoBtn {
 
 /* CONTENEDOR DE LA TABLA */
 #w {
+  text-align: center;
   width: 100%;
   max-height: 400px; /* Altura máxima antes de activar scroll */
   overflow-y: auto; /* Scroll vertical si se pasa de altura */
