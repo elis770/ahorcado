@@ -24,7 +24,8 @@ async function cargarPalabras() {
   try {
     //esperar res del servidor
     const respuesta = await fetch('http://localhost:3000/api/palabras');
-    const palabras = await respuesta.json();
+    const datos = await respuesta.json();
+    const palabras = datos.palabras;
     
       if (!Array.isArray(palabras) || palabras.length === 0) {
       throw new Error("La respuesta no es un array válido o está vacío");

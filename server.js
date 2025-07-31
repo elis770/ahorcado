@@ -43,7 +43,7 @@ app.get('/api/palabras', tryCatchWrapper((req, res) => {
   res.json(palabras);
 }));
 
-// Endpoint para agregar palabras
+/*// Endpoint para agregar palabras
 app.post('/api/palabras', tryCatchWrapper((req, res) => {
   const { palabra } = req.body;
   if (!palabra) return res.status(400).json({ error: 'Debe enviar una palabra' });
@@ -53,7 +53,7 @@ app.post('/api/palabras', tryCatchWrapper((req, res) => {
   fs.writeFileSync(path.join(__dirname, 'juego', 'palabras.json'), JSON.stringify(palabras, null, 2));
 
   res.status(201).json({ mensaje: 'Palabra agregada', palabras });
-}));
+}));*/
 
 let resultados = [];
 
