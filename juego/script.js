@@ -20,42 +20,37 @@ let palabraSecreta, //palabra a adivinar
   inicioBtn;
 
 //generacion de la palabra secreta a descubrir desde el servidor
-async function cargarPalabras() {
+// Función para cargar la palabra y preparar los elementos relacionados
+async function cargarPalabraYPreparar() {
   try {
-    //esperar res del servidor
-    const respuesta = await fetch('http://localhost:3000/api/palabras');
+    // Esperar respuesta del servidor
+    const respuesta = await fetch('http://localhost:7000/api/palabras');
     const datos = await respuesta.json();
-    const palabras = datos.palabras;
-    
-      if (!Array.isArray(palabras) || palabras.length === 0) {
-      throw new Error("La respuesta no es un array válido o está vacío");
-    }
-    //elige una de un indice random
-    const indiceAleatorio = Math.floor(Math.random() * palabras.length);
-    console.log("Palabra elegida:", palabras[indiceAleatorio]);
-    return palabras[indiceAleatorio];
+    console.log('Respuesta del servidor:', datos);
+    // Asignar la palabra recibida a palabraSecreta
+    palabraSecreta = datos.palabra || datos;
+    console.log('Palabra secreta asignada:', palabraSecreta);
+
+    // Preparar elementos relacionados con la palabra
+    let palabraMostrada = Array(palabraSecreta.length).fill('_');
+    let xletras = document.getElementById('xletras');
+    xletras.innerHTML = palabraSecreta.length;
+    guiones.innerHTML = palabraMostrada
+      .map((letra) => `<span>${letra}</span>`)
+      .join(' ');
+    guionesSpans = document.querySelectorAll('.guiones span');
   } catch (error) {
-    mostrarMensajeTemporal(
-      '⚠️ Error al cargar las palabras desde el servidor: ' + error
-    );
+    mostrarMensajeTemporal('⚠️ Error al cargar las palabras desde el servidor: ' + error);
     console.log(error);
-    return null; // Devuelve null o una palabra por defecto en caso de error
   }
 }
 
-//funcion preparacion para el juego
+// Función de preparación para el juego
 async function objetosJuego() {
   let name = document.getElementById('name');
   name.innerHTML = nombreVictima;
-  palabraSecreta = await cargarPalabras(); //precisamos la palabra secreta
-  let palabraMostrada = Array(palabraSecreta.length).fill('_'); //recoremos la palabra para saber cuantas hay
-  let xletras = document.getElementById('xletras');
-  xletras.innerHTML = palabraSecreta.length; //lo anterior lo ponemos en html
-  xintentos.innerHTML = 9; //por default tiene 9 intentos (debe ser menos TODO pero tendrias que editar las imagenes despues)
-  guiones.innerHTML = palabraMostrada //la cantidad de letras es la misma para poner los guiones
-    .map((letra) => `<span>${letra}</span>`)
-    .join(' ');
-  guionesSpans = document.querySelectorAll('.guiones span'); //llamamos los guiones
+  await cargarPalabraYPreparar(); // Carga la palabra y prepara los elementos
+  xintentos.innerHTML = 9; // Por default tiene 9 intentos
 
   //Limpiar cualquier timeout pendiente de una partida anterior
   if (tempMessageTimeoutId) {
@@ -86,13 +81,15 @@ function mostrarMensajeTemporal(mensaje) {
   R.style.display = 'block';
   R.innerHTML = mensaje; //mensaje me lo mandan por parametro
 
-  //que desaparezca el mensaje luego de unos segundos
-  setTimeout(() => {
-    m.style.display = 'none';
-    R.style.display = 'none';
-    R.innerHTML = '';
-    tempMessageTimeoutId = null;
-  }, 2000); // Aumentado a 2 segundos para mejor visibilidad
+  //que desaparezca el mensaje luego de unos segundos SOLO si no es mensaje de fin de partida
+  if (!mensaje.includes('¡HAS PERDIDO!') && !mensaje.includes('¡FELICITACIONES!')) {
+    setTimeout(() => {
+      m.style.display = 'none';
+      R.style.display = 'none';
+      R.innerHTML = '';
+      tempMessageTimeoutId = null;
+    }, 2000); // 2 segundos para mensajes temporales
+  }
 }
 
 //opciones de accion a la hora de que usuario ingrese letra
@@ -185,7 +182,7 @@ async function guardarResultado(
   puntaje
 ) {
   try {
-    await fetch('http://localhost:3000/api/resultados', {
+    await fetch('http://localhost:7000/api/resultados', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -207,7 +204,7 @@ async function guardarResultado(
 // Obtiene los resultados de los jugadores desde el servidor.
 async function cargarResultados() {
   try {
-    const respuesta = await fetch('http://localhost:3000/api/resultados');
+    const respuesta = await fetch('http://localhost:7000/api/resultados');
     if (!respuesta.ok) {
       throw new Error(`Error HTTP: ${respuesta.status}`);
     }
@@ -237,11 +234,7 @@ function mostrarResultadosEnTabla(resultados) {
           <tr>
             <th>Puesto</th>
             <th>Jugador</th>
-            <th>Palabra</th>
-            <th>Intentos Fallidos</th>
-            <th>Resultado</th>
             <th>Puntaje</th>
-            <th>Fecha</th>
           </tr>
         </thead>
         <tbody>
@@ -253,11 +246,7 @@ function mostrarResultadosEnTabla(resultados) {
         <tr>
           <td>#${i + 1}</td>
           <td>${r.nombre || 'Anónimo'}</td>
-          <td>${r.palabra}</td>
-          <td>${r.intentos_fallidos}</td>
-          <td>${r.resultado}</td>
           <td>${r.puntaje}</td>
-          <td>${new Date(r.fecha).toLocaleString()}</td>
         </tr>
       `;
   });
@@ -282,17 +271,24 @@ document.addEventListener('DOMContentLoaded', async () => {
   const contraPersonaBtn = document.getElementById('contraPersona');
   playersBtn = document.getElementById('playersBtn');
 
-  contraPersonaBtn.addEventListener('click', () => {
+
+  function intentarIniciarJuego() {
     nombreJugador = nom1Input.value.trim();
     nombreVictima = nom2Input.value.trim();
-
     if (!nombreJugador || !nombreVictima) {
       mostrarMensajeTemporal('⚠️ Por favor, ingresa ambos nombres.');
       return;
     }
-
     miBody.setAttribute('data-tag', 'uno');
     iniciarJuego();
+  }
+
+  contraPersonaBtn.addEventListener('click', intentarIniciarJuego);
+  nom1Input.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') intentarIniciarJuego();
+  });
+  nom2Input.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') intentarIniciarJuego();
   });
 
   // Cargar y mostrar los resultados de la tabla de jugadores.
